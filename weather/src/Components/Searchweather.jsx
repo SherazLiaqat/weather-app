@@ -1,8 +1,25 @@
-import React from "react";
+import React,{useEffect,useState} from "react";
 import nature from "./Static/Images/nature.jpg";
 import SearchIcon from '@mui/icons-material/Search';
 import CloudIcon from '@mui/icons-material/Cloud';
 function Searchweather() {
+  const [search, setSearch] = useState("London");
+  const [data, setData] = useState([]);
+  const [input, setInput] = useState("");
+  let mount=true;
+  useEffect(() => {
+    const fetchWeather=async()=>{
+      const response=await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${search}&appid=7372d97bec2d0e7ff6e622a2d691c770`);
+         if(mount){
+           setData(await response.json())
+         }
+         return()=>{
+           mount=false;
+         }
+  }
+  fetchWeather();
+  }, [])
+  let temp=(data.main.temp -273.15).toFixed(2)
   return (
     <div className="container mt-4 mb-4">
       <div className="row justify-content-center">
@@ -31,7 +48,7 @@ function Searchweather() {
               </p>
               <hr/>
               <CloudIcon/>              
-<h1 classNam="fw-bolder mb-5">33.03 &deg;C</h1>
+<h1 classNam="fw-bolder mb-5">{temp} &deg;C</h1>
 <p className="lead fw-bolder mb-0">Cloud</p>
 <p className="lead mt-4">30.8 &deg;C | 40.8 &deg;C</p>
               </div>
